@@ -1,5 +1,7 @@
 import React from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
+import { Extrapolate, interpolate } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 const { height: wHeight, width: wWidth } = Dimensions.get("window");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -13,12 +15,29 @@ const styles = StyleSheet.create({
     left: 0,
     width: wWidth,
     resizeMode: "cover",
-    height: HEADER_IMAGE_HEIGHT
-  }
+    height: HEADER_IMAGE_HEIGHT,
+  },
 });
 
-interface HeaderImageProps {}
+interface HeaderImageProps {
+  y: Animated.Node<number>;
+}
 
-export default ({}: HeaderImageProps) => {
-  return <Image source={backgroundImage} style={styles.image} />;
+export default ({ y }: HeaderImageProps) => {
+  const height = interpolate(y, {
+    inputRange: [-100, 0],
+    outputRange: [HEADER_IMAGE_HEIGHT + 100, HEADER_IMAGE_HEIGHT],
+    extrapolateRight: Extrapolate.CLAMP,
+  });
+  const top = interpolate(y, {
+    inputRange: [0, 100],
+    outputRange: [0, -100],
+    extrapolateLeft: Extrapolate.CLAMP,
+  });
+  return (
+    <Animated.Image
+      source={backgroundImage}
+      style={[styles.image, { height, top }]}
+    />
+  );
 };

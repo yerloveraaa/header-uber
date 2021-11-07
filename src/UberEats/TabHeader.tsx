@@ -1,6 +1,6 @@
 import React, { RefObject, useState } from "react";
 import { StyleSheet, View } from "react-native";
-
+import Animated from "react-native-reanimated";
 import Tabs from "./Tabs";
 import { TabModel } from "./Content";
 
@@ -15,13 +15,14 @@ const styles = StyleSheet.create({
 
 interface TabHeaderProps {
   tabs: TabModel[];
+  transition: Animated.Node<number>
 }
 
-export default ({ tabs }: TabHeaderProps) => {
+export default ({ tabs, transition }: TabHeaderProps) => {
   const [measurements, setMeasurements] = useState<number[]>(
     new Array(tabs.length).fill(0)
   );
-
+  const opacity = transition;
   const style = {
     borderRadius: 24,
     backgroundColor: "black",
@@ -30,7 +31,7 @@ export default ({ tabs }: TabHeaderProps) => {
   };
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, {opacity}]}>
       <Tabs
         onMeasurement={(i, m) => {
           measurements[i] = m;
@@ -48,6 +49,6 @@ export default ({ tabs }: TabHeaderProps) => {
         }}
         {...{ tabs }}
       />
-    </View>
+    </Animated.View>
   );
 };
