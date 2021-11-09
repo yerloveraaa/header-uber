@@ -38,9 +38,10 @@ const styles = StyleSheet.create({
 interface HeaderProps {
   tabs: TabModel[];
   y: Animated.Node<number>;
+  scrollView: RefObject<Animated.ScrollView>
 }
 
-export default ({ tabs, y }: HeaderProps) => {
+export default ({ tabs, y, scrollView }: HeaderProps) => {
   const [toggle] = useValues<0 | 1>([0], []);
   const insets = useSafeArea();
   const { top: paddingTop } = insets;
@@ -87,7 +88,7 @@ export default ({ tabs, y }: HeaderProps) => {
         </Animated.Text>
         <Icon name="heart" size={ICON_SIZE} color="white" />
       </View>
-      <TabHeader {...{ tabs, transition }} />
+      <TabHeader {...{ tabs, transition, y, scrollView }} />
     </View>
   );
 };

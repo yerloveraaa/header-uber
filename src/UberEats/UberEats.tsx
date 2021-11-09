@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
+
 
 import HeaderImage from "./HeaderImage";
 import Content, { defaultTabs } from "./Content";
 import Header from "./Header";
 import { onScroll, useValues } from "react-native-redash";
-import Animated from 'react-native-reanimated';
+import Animated from "react-native-reanimated";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -13,14 +14,17 @@ const styles = StyleSheet.create({
 });
 
 export default () => {
+ 
+  const scrollView = useRef<Animated.ScrollView>(null);
   const [tabs, setTabs] = useState(defaultTabs);
   const [y] = useValues([0], []);
   return (
     <View style={styles.container}>
-      <HeaderImage {...{y}} />
+      <HeaderImage {...{ y }} />
       <Animated.ScrollView
+        ref={scrollView}
         style={StyleSheet.absoluteFill}
-        onScroll={onScroll({y})}
+        onScroll={onScroll({ y })}
         scrollEventThrottle={1}
       >
         <Content
@@ -30,7 +34,7 @@ export default () => {
           }}
         />
       </Animated.ScrollView>
-      <Header {...{ tabs, y }} />
+      <Header {...{ tabs, y, scrollView }} />
     </View>
   );
 };
